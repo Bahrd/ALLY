@@ -9,10 +9,6 @@
 # 7. In order to improve approximation quality one can add a new (set of L) 
 #    pattern(s) in the arbitrary position(s), together with the accompanying lattice points.
 
-## &"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\python.exe" - YPMV (Your Path May Vary)
-#  .\Lp-improved-agnostic-Voronoi.py '2**3' '2**4 * 3 * 5 * 19 * 21673' - as used in the IEEE article 
-#  Note 2**3 = 8 and 2**4 * 3 * 5 * 19 * 21673 = 98828880 - so ♫♪ please don't take [it serious] just because you can! ♪♫
-
 from winsound import Beep as beep
 from random import randrange as RA, seed
 from sys import argv
@@ -43,3 +39,7 @@ for file in glob('.\images\*.png'): remove(file)
 # ... and a (nutshell) summary and fanfares!
 print('seed =', sd)
 for pl in ((0x1b8, 0x7d), (0x1b8, 0x7d), (0x19f, 0x7d), (0x1b8, 0xfa)): beep(*pl) # ♫♪ ¡⅄⅃LY! ♪♫
+
+## &"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\python.exe" - YPMV (Your Path May Vary)
+#  .\Lp-improved-agnostic-Voronoi.py '2**3' '2**4 * 3 * 5 * 19 * 21673' - as used in the IEEE article 
+#  Note 2**3 = 8 and 2**4 * 3 * 5 * 19 * 21673 = 98828880 - so ♫♪ please don't take [it serious] just because you can! ♪♫

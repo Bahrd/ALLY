@@ -7,10 +7,6 @@
 # 5. Generate o Voronoi diagram for these N × N patterns (effectively, for the N × N Hanan grid)
 # 6. Repeat the steps #2-#5 for other Lq, 0 < q ≤ 2 (q = 0.25 seems extraordinary enough)
 
-## &"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\python.exe" - YPMV (Your Python May Vary)
-#  .\Lp-agnostic-Voronoi.py '2**3' '2**4 * 3 * 5 * 19 * 21673' - as used in the IEEE article 
-#  Note 2**3 = 8 and 2**4 * 3 * 5 * 19 * 21673 = 98828880 - so ♫♪ please don't take [it serious] even though you can! ♪♫
-
 from winsound import Beep as beep
 from random import randrange as RA, seed
 from sys import argv
@@ -43,3 +39,8 @@ for file in glob('.\images\*.png'): remove(file)
 # ... and a (nutshell) summary and fanfares!
 print('seed =', sd) # A tribute to CDMA (and H. Lamar & G. Antheil 1942's invention)
 for pl in ((0x1b8, 0x7d), (0x1b8, 0x7d), (0x19f, 0x7d), (0x1b8, 0xfa)): beep(*pl) # ♫♪ ¡⅄⅃LY! ♪♫
+
+## &"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\python.exe" - YPMV (Your Python May Vary)
+#  .\Lp-agnostic-Voronoi.py '2**3' '2**4 * 3 * 5 * 19 * 21_673' - as used in the IEEE article 
+#  Note 2**3 = 8 and 2**4 * 3 * 5 * 19 * 21_673 = 98_828_880 - so ♫♪ please don't take [it serious] even though you can! ♪♫
+#  Also a fun fact: 98'828'880 ≈ c/3 (i.e. one third of the speed of light, 299'792'458... ;)

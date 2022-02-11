@@ -186,7 +186,7 @@ def lp_improved_agnostic_Voronoi(NX, NY, m = 0x1, c = 0x10, p = 2.0, q = 0.25, s
             pin_patterns(img, zip(ax, ay), [-3, -2, -1, 0, 1, 2, 3], c_red)
             save_image('./images/Lp-improved-agnostic-Voronoi-sites-L{}@{}', image, p, sd)
 
-## Perform an 'operation' on diagrams (a set difference $S \setminus A$ in particular, when "operation = 'abs(a - b)'"
+## Perform an 'operation' on diagrams (e.g. a set difference $S \setminus A$ when "operation = 'abs(a - b)'"
 def lp_Voronoi_set_op(p = 2, sd = 0x303, improved = False, operation = 'abs(a - b)'):
     fa = './images/Lp-{}agnostic-Voronoi-L{}@{}.png'.format('improved-' if improved else '', p, sd)
     if(isfile(fa)):

@@ -1,7 +1,8 @@
-﻿## The Lp agnostic 1-NN algorithm illustration [Project «⅄⅃LY»]
+﻿### ALGORITHMS 1 & 3
+##  The Lp agnostic 1-NN algorithm illustration [Project «⅄⅃LY»]
 # 1. Generate N random patterns inside a square
 # 2. Create the Voronoi's diagram for Lp, 0 < p ≤ 2 (p = 2.0 is somehow distingushed)
-# 3. Compute an N × N Cartesian product of pattern's coordinates to get a Hanan grid
+# 3. Compute an N × N Cartesian product of pattern's features to get a Hanan grid
 # 4. Associate the new N × (N - 1) patterns to the classes w.r.t. the selected Lp
 # 5. Generate o Voronoi diagram for these N × N patterns (effectively, for the N × N Hanan grid)
 # 6. Repeat the steps #2-#5 for other Lq, 0 < q ≤ 2 (q = 0.25 seems intriguing enough)

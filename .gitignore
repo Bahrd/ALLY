@@ -1,7 +1,7 @@
-## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
-# Ignoramus et ignorabimus...
+## Ignoramus et ignorabimus...
 /images/*.pdf
 /images/*.png
 /.vs
 /__pycache__
 /samples/desktop.ini
+/images/desktop.ini

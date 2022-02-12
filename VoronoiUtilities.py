@@ -8,7 +8,6 @@
 
 from time import perf_counter as TT
 from random import randrange as RA, seed
-from numpy import arange
 from itertools import product, permutations
 from math import sqrt, inf
 from PIL import Image, ImageMath
@@ -43,13 +42,15 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 																		 (0xdd, 0xdd, 0xdd), (0xff, 0xff, 0xff))
 
 ## An lp-distance function implementation... See: https://www.geeksforgeeks.org/python-infinity/
-#  (So ♫♪ Longing for a... [pattern matching, it] will come [in Python 3.10+] ♪♫)
 dictum_acerbum = {	0.0: lambda x, y: int(x != 0.0) + int(y != 0.0),		# p == 0.0, the Hamming distance
 					0.5: lambda x, y: (sqrt(abs(x)) + sqrt(abs(y)))**2.0,	# p == 0.5, hand-crafted optimization
 					1.0: lambda x, y: abs(x) + abs(y),						# p == 1.0, the taxi-cab metric (Manhattan distance) 
 					2.0: lambda x, y: sqrt(x**2.0 + y**2.0),				# p == 2.0, the good ol' Euclid
-					inf: lambda x, y: max(abs(x), abs(y))}					# p ==  ∞,  the max metric
-def lp_distance(x, y, p): 
+		            inf: lambda x, y: max(abs(x), abs(y))}			        # p ==  ∞,  the max metric
+#  ♫♪ Longing for a... [pattern matching, 
+#  it] will come [in the Python 3.10]! ♪♫
+#  https://www.python.org/dev/peps/pep-0636/#matching-sequences
+def lp_distance(x, y, p: float): 
 	try:				return dictum_acerbum[p](x, y)						# kinda branch-less programming ;)
 	except KeyError:	return pow(pow(abs(x), p) + pow(abs(y), p), 1.0/p)	
 
@@ -109,11 +110,11 @@ def lp_planted_Voronoi(sd, w = 0x100, p = 2.0, Hanan = False, context = True):
 	pin_patterns(img, planted, [-2, -1, 0, 1, 2], c_yellow)
 	save_image('./images/Voronoi-planted-sites-L{}@{}', image, p, sd)
 
-### A (hard) working stuff... 
-## 1. lp_Voronoi				    - set $S_{N}$ 
-## 2. lp_agnostic_Voronoi		    - set $A_{N}$
-## 3. lp_improved_agnostic_Voronoi  - set $A_{N+L}$ 
-###   lp_Voronoi_set_op             - with a gim[p]hotoshop gimmick... e.g. to perform a visual $S \setminus A$
+### A (hard) working stuff...        | Visualization of decisions for...
+##   I. lp_Voronoi				     | set $S_{N}$ 
+##  II. lp_agnostic_Voronoi		     | set $A_{N}$
+## III. lp_improved_agnostic_Voronoi | set $A_{N+L}$ 
+##  IV. lp_Voronoi_set_op            | A gim[p]hotoshop-like gimmick (i.e. e.g. $S \setminus A$)
 
 @ITT
 def lp_Voronoi(w = 0x100, p = 2.0, c = 0x10, sd = 0x303):
@@ -138,7 +139,7 @@ def lp_Voronoi(w = 0x100, p = 2.0, c = 0x10, sd = 0x303):
 @ITT
 def lp_agnostic_Voronoi(NX, NY, p = 2.0, q = 0.25, c = 0x10, sd = 0x303):
 	## Essentially, given N points, we 'yield' a Cartesian product of two vectors 
-	# of N elements being their first and second coordinates, respectively
+	# of N elements composed of first and second coordinates of these points, respectively
     f = './images/Voronoi-L{}@{}'.format(p, sd)
     with(Image.open(f + '.png')) as image:
         image = Image.open(f + '.png')
@@ -159,7 +160,7 @@ def lp_agnostic_Voronoi(NX, NY, p = 2.0, q = 0.25, c = 0x10, sd = 0x303):
 @ITT
 def lp_improved_agnostic_Voronoi(NX, NY, m = 0x1, c = 0x10, p = 2.0, q = 0.25, sd = 0x303):
 	## Generate extra patterns for extra precision (in locations
-	#   where the classifiers differ for Lp and for agnostic-Lp).
+	#  where the classifiers differ for Lp and for agnostic-Lp).
 	## ⅄⅃LY 
     f = './images/agnostic-Voronoi-math-L{}@{}'.format(p, sd)
     with(Image.open(f + '.png')) as image:

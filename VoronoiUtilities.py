@@ -12,7 +12,7 @@ from itertools import product, permutations
 from math import sqrt, inf
 from PIL import Image, ImageMath
 from os.path import isfile
-
+from sys import version_info
 ## A decorative fun... See: https://www.geeksforgeeks.org/decorators-in-python/
 def ITT(f):
 	def time_warper_wrapper(*args, **kwargs): 
@@ -41,18 +41,9 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 																		 (0, 0, 0), (0x80, 0x80, 0x80), 
 																		 (0xdd, 0xdd, 0xdd), (0xff, 0xff, 0xff))
 
-## An lp-distance function implementation... See: https://www.geeksforgeeks.org/python-infinity/
-dictum_acerbum = {	0.0: lambda x, y: int(x != 0.0) + int(y != 0.0),		# p == 0.0, the Hamming distance
-					0.5: lambda x, y: (sqrt(abs(x)) + sqrt(abs(y)))**2.0,	# p == 0.5, hand-crafted optimization
-					1.0: lambda x, y: abs(x) + abs(y),						# p == 1.0, the taxi-cab metric (Manhattan distance) 
-					2.0: lambda x, y: sqrt(x**2.0 + y**2.0),				# p == 2.0, the good ol' Euclid
-		            inf: lambda x, y: max(abs(x), abs(y))}			        # p ==  ∞,  the max metric
-#  ♫♪ Longing for a... [pattern matching, 
-#  it] will come [in the Python 3.10]! ♪♫
-#  https://www.python.org/dev/peps/pep-0636/#matching-sequences
-def lp_distance(x, y, p: float): 
-	try:				return dictum_acerbum[p](x, y)						# kinda branch-less programming ;)
-	except KeyError:	return pow(pow(abs(x), p) + pow(abs(y), p), 1.0/p)	
+## The Lp-distance functions... 
+if version_info >= (3, 10): from distance import lp_distance
+else:                       from distance_deprecated import lp_distance
 
 ## A naïve implementation of the 1-NN algorithm
 #  (based on https://rosettacode.org/wiki/Voronoi#Python)

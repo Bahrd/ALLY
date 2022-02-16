@@ -13,7 +13,7 @@ Voronoi diagrams for the set $\mathcal{S}_N$ of $N = 8$ random patterns
 :-:|:-: 
 $p=\frac{1}{4}$|$p = 2$
 
-$L_p$-agnostic Hanan-grid approximations $\mathcal{A}_N$ and $\mathcal{A}_{N+L}$ of the original set $\mathcal{S}_N$ with $p = 2$
+$L_p$-agnostic Hanan-grid approximations $\mathcal{A}_{N}$ and $\mathcal{A}_{N+L}$ of the original set $\mathcal{S}_N$ with $p = 2$
 
 
 ![Lq-agnostic](./samples/2A.png)|![Lq-agnostic&improved](./samples/2AI.png)

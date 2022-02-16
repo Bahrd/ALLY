@@ -1,4 +1,4 @@
-﻿### Lp distance functions implementation
+﻿### Lp distance functions implementation (pre ver. 3.10 implementation)
 ## See: https://stackoverflow.com/questions/71091850/structural-pattern-matching-and-infinity/
 from math import sqrt, inf
 

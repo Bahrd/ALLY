@@ -42,8 +42,8 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 																		 (0xdd, 0xdd, 0xdd), (0xff, 0xff, 0xff))
 
 ## The Lp-distance functions... 
-if version_info >= (3, 10): from distance import lp_distance
-else:                       from distance_deprecated import lp_distance
+if version_info >= (3, 10): from distance  import lp_distance
+else:                       from distanced import lp_distance
 
 ## A naïve implementation of the 1-NN algorithm
 #  (based on https://rosettacode.org/wiki/Voronoi#Python)
@@ -76,30 +76,30 @@ def save_image(path, im_file, p, sd):
 def lp_planted_Voronoi(sd, w = 0x100, p = 2.0, Hanan = False, context = True):
     ## Selection of 2D Voronoi diagrams generators 
     ##  A diagram of seeds (patterns) planted on a Hanan grid
-	seed(sd) # Controlled randomness to get a better picture of the phenomenon
-	         # ♫♪ Choking on the bad, bad, bad, bad, bad, bad seed! ♪♫
-	
-	## Pattern classes' colors
-	colors = [c_red, c_whitish, c_gray, c_black, c_black, c_whitish]
+    seed(sd) # Controlled randomness to get a better picture of the phenomenon
+	            # ♫♪ Choking on the bad, bad, bad, bad, bad, bad seed! ♪♫
+    ## Pattern classes' colors
+    colors = [c_red, c_whitish, c_gray, c_black, c_black, c_whitish]
 
-	# ♫♪ We're gonna have to reap from some seed that's been sowed... ♪♫
-	pp = [RA(0x10, w - 0x10), RA(0x10, w - 0x10)]        # Our 'pater noster' mother-pattern...
-	planted = list(permutations(pp))				     # ... and the original kid-like patterns...
-	implanted = list(product(pp, pp))				     # ... and the neighborhood ones
-	if not Hanan:
-		outgrid = [pp[1], RA(w)]					     # A stray pattern ♫♪ Just like the curse, ♪♫ 
-													     #                 ♫♪ just like the stray, ♪♫ 
-		planted += [outgrid]; implanted += [outgrid]     #                 ♫♪ you feed it once and now it stays! ♪♫ 
-		if context == True:	implanted += [[pp[0], outgrid[1]]] # An on-grid companion of the stray one 
+    # ♫♪ We're gonna have to reap from some seed that's been sowed... ♪♫
+    pp = [RA(0x10, w - 0x10), RA(0x10, w - 0x10)]        # Our 'pater noster' mother-pattern...
+    planted = list(permutations(pp))				     # ... and the original kid-like patterns...
+    implanted = list(product(pp, pp))				     # ... and the neighborhood ones
+    if not Hanan:
+        outgrid = [pp[1], RA(w)]					     # A stray pattern ♫♪ Just like the curse, ♪♫ 
+													        #                 ♫♪ just like the stray, ♪♫ 
+        planted += [outgrid]; implanted += [outgrid]     #                 ♫♪ you feed it once and now it stays! ♪♫ 
+        if context == True:	implanted += [[pp[0], outgrid[1]]] # An on-grid companion of the stray one 
 														       # (♫♪ 'cause misery loves company! ♪♫)
 	## Filling cells (i.e. performing classification)
-	image = Image.new("RGB", (w, w)); img = image.load()
-	classify_nn(w, p, img, implanted, colors)
-	save_image('./images/Voronoi-planted-L{}@{}', image, p, sd)
-	## ... and painting patterns
-	pin_patterns(img, implanted,      [-1, 0, 1], c_white)
-	pin_patterns(img, planted, [-2, -1, 0, 1, 2], c_yellow)
-	save_image('./images/Voronoi-planted-sites-L{}@{}', image, p, sd)
+    with(Image.new("RGB", (w, w))) as image:
+        img = image.load()
+        classify_nn(w, p, img, implanted, colors)
+        save_image('./images/Voronoi-planted-L{}@{}', image, p, sd)
+        ## ... and painting patterns
+        pin_patterns(img, implanted,   [-1, 0, 1], c_white)
+        pin_patterns(img, planted, [-2, -1, 1, 2], c_yellow)
+        save_image('./images/Voronoi-planted-sites-L{}@{}', image, p, sd)
 
 ### A (hard) working stuff...        | Visualization of decisions for...
 ##   I. lp_Voronoi				     | set $S_{N}$ 
@@ -109,22 +109,21 @@ def lp_planted_Voronoi(sd, w = 0x100, p = 2.0, Hanan = False, context = True):
 
 @ITT
 def lp_Voronoi(w = 0x100, p = 2.0, c = 0x10, sd = 0x303):
-	seed(sd) # Controlled randomness that yields the same pseudo-random patterns for various p
+    seed(sd) # Controlled randomness that yields the same pseudo-random patterns for various p
 			 # Just a standard random case... # Black (, red) & white(-ish)...
-	
 	## Creating patterns
-	nxy, nrgb = zip(*((random_xy(w), random_color(0x0, 0x100)) for _ in range(c)))	
+    nxy, nrgb = zip(*((random_xy(w), random_color(0x0, 0x100)) for _ in range(c)))	
 
 	## Drawing cells... (i.e. classifying w.r.t. the set Sn)
-	image = Image.new("RGB", (w, w)); img = image.load()
-	classify_nn(w, p, img, nxy, nrgb)
-	save_image('./images/Voronoi-L{}@{}', image, p, sd)
+    with(Image.new("RGB", (w, w))) as image: 
+        img = image.load()
+        classify_nn(w, p, img, nxy, nrgb)
+        save_image('./images/Voronoi-L{}@{}', image, p, sd)
 
-	## ... and patterns
-	pin_patterns(img, nxy, [-2, -1, 0, 1, 2], c_yellow)
-	save_image('./images/Voronoi-sites-L{}@{}', image, p, sd)
-
-	return zip(*nxy)
+        ## ... and patterns
+        pin_patterns(img, nxy, [-2, -1, 1, 2], c_yellow)
+        save_image('./images/Voronoi-sites-L{}@{}', image, p, sd)
+        return zip(*nxy)
 
 ### Algorithm 1
 @ITT
@@ -143,8 +142,8 @@ def lp_agnostic_Voronoi(NX, NY, p = 2.0, q = 0.25, c = 0x10, sd = 0x303):
         save_image('./images/Lp-agnostic-Voronoi-L{}@{}', image, p, sd)
 
 	    ## ... and patterns
-        pin_patterns(img, product(NX, NY),    [-1, 0, 1], c_white)
-        pin_patterns(img, zip(NX, NY), [-2, -1, 0, 1, 2], c_yellow)
+        pin_patterns(img, product(NX, NY), [-1, 0, 1], c_white)
+        pin_patterns(img, zip(NX, NY), [-2, -1, 1, 2], c_yellow)
         save_image('./images/Lp-agnostic-Voronoi-sites-L{}@{}', image, p, sd)
 
 ### Algorithm 3
@@ -173,9 +172,9 @@ def lp_improved_agnostic_Voronoi(NX, NY, m = 0x1, c = 0x10, p = 2.0, q = 0.25, s
             classify_nn(w, p, img, product(NX, NY), nrgb)
             save_image('./images/Lp-improved-agnostic-Voronoi-L{}@{}', image, p, sd)
             ## ... and painting patterns	
-            pin_patterns(img, product(NX, NY),           [-1, 0, 1], c_white)
-            pin_patterns(img, zip(NX, NY),     	  [-2, -1, 0, 1, 2], c_yellow)
-            pin_patterns(img, zip(ax, ay), [-3, -2, -1, 0, 1, 2, 3], c_red)
+            pin_patterns(img, product(NX, NY),        [-1, 0, 1], c_white)
+            pin_patterns(img, zip(NX, NY),   	  [-2, -1, 1, 2], c_yellow)
+            pin_patterns(img, zip(ax, ay), [-3, -2, -1, 1, 2, 3], c_red)
             save_image('./images/Lp-improved-agnostic-Voronoi-sites-L{}@{}', image, p, sd)
 
 ## Perform an 'operation' on diagrams (e.g. a set difference $S \setminus A$ when "operation = 'abs(a - b)'"

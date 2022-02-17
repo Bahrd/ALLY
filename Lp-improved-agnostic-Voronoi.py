@@ -40,6 +40,6 @@ for file in glob('.\images\*.png'): remove(file)
 print('seed =', sd)
 for pl in ((0x1b8, 0x7d), (0x1b8, 0x7d), (0x19f, 0x7d), (0x1b8, 0xfa)): beep(*pl) # ♫♪ ¡⅄⅃LY! ♪♫
 
-## &"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64\python.exe" - YPMV (Your Path May Vary)
+## &"C:\Users\Przem\AppData\Local\Programs\Python\Python310\python.exe" - YPMV (Your Path May Vary)
 #  .\Lp-improved-agnostic-Voronoi.py '2**3' '2**4 * 3 * 5 * 19 * 21673' - as used in the IEEE article 
 #  Note 2**3 = 8 and 2**4 * 3 * 5 * 19 * 21673 = 98828880 - so ♫♪ please don't take [it serious] just because you can! ♪♫

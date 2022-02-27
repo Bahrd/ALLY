@@ -18,8 +18,6 @@ from random import randrange as RA, seed
 from PIL import Image
 from VoronoiUtilities import save_image, ITT
 
-# x, S = [[2, 1], [2, 3]], {(0, 0): 0, (1, 1): 1, (2, 2): 2, (3, 3): 3}
-# k, p = 3, 2
 @ITT
 def plain_vanila_knn_lp_Voronoi(x, S, k, p):
     X = tuple(S.keys())
@@ -52,7 +50,8 @@ def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
         # 'knn' is a set of k nearest neighbor pattern's class indicess
         knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
         # The mode determines the class index the patterns are assigned to
-        pattern_class = int(mode(knn).mode[0])
+        unique_knn = len(unique(knn))
+        pattern_class = int(mode(knn).mode[0]) if unique_knn != k else int(knn[0])
 
         ## The line below 'paints a picture' pixel-by-pixel
         m, n = x[mn]; img[m, n] = pattern_classes[pattern_class]
@@ -60,7 +59,7 @@ def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
     save_image(f'./images/{k}-N' + 'N-L{}@{}', image, p, sd)
 
 # Exemplary usage
-k, p, N, Hanan = 0b101, 0b10, 0b1000, True
+k, p, N, Hanan = 0b11, 0b1, 0b10_000, False
 
 # Colors for illustrative purposes
 c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 0, 0), (0, 0xff, 0), 
@@ -70,7 +69,7 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 colors = [c_white, c_whitish, c_gray, c_black, c_red]
 
 # Patterns' coordinates (i.e. feature vectors of ${X_n} \in S_N$)
-sd, w = 0x1000000, 0x100; seed(sd)
+sd, w = 0x1_000_000, 0x100; seed(sd)
 nx, ny, S = [RA(0x10, w - 0x10) for _ in range(N)], [RA(0x10, w - 0x10) for _ in range(N)], {}
 
 # For a Hanan's plantation: use 'product' rather than 'zip'

@@ -9,7 +9,7 @@
 #      * indices of k closest patterns 
 #      * a mode of class indices and assign it to $x$
 
-from numpy import arange, array, argpartition, partition, zeros
+from numpy import arange, array, argsort, unique, zeros
 from scipy.spatial.distance import cdist
 from scipy.stats import mode
 from itertools import product
@@ -18,15 +18,18 @@ from random import randrange as RA, seed
 from PIL import Image
 from VoronoiUtilities import save_image, ITT
 
+# x, S = [[2, 1], [2, 3]], {(0, 0): 0, (1, 1): 1, (2, 2): 2, (3, 3): 3}
+# k, p = 3, 2
 @ITT
-def vanila_knn_lp_Voronoi(x, S, k, p):
+def plain_vanila_knn_lp_Voronoi(x, S, k, p):
     X = tuple(S.keys())
     D = cdist(array(x), array(X), 'minkowski', p = p)
     classes = []
     for (mn, distance) in enumerate(D): 
-        k_nearest_neighbors = argpartition(distance, k)
-        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors[:k]]
-        pattern_class = int(mode(knn).mode[0])
+        k_nearest_neighbors = argsort(distance)[:k]
+        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
+        unique_knn = len(unique(knn))
+        pattern_class = int(mode(knn).mode[0]) if unique_knn != k else int(knn[0])
         classes.append(pattern_class)
     return classes
 
@@ -45,9 +48,9 @@ def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
     for (mn, distance) in enumerate(D): 
         # Note we don't care about the distances, we only need the class indices
         # 'k_nearest_neighbors' is a set of k nearest neighbor pattern's indices
-        k_nearest_neighbors = argpartition(distance, k)
+        k_nearest_neighbors = argsort(distance)[:k]
         # 'knn' is a set of k nearest neighbor pattern's class indicess
-        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors[:k]]
+        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
         # The mode determines the class index the patterns are assigned to
         pattern_class = int(mode(knn).mode[0])
 
@@ -57,7 +60,7 @@ def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
     save_image(f'./images/{k}-N' + 'N-L{}@{}', image, p, sd)
 
 # Exemplary usage
-k, p, N, Hanan = 0b111, 0b100, 0b1000000, False
+k, p, N, Hanan = 0b101, 0b10, 0b1000, True
 
 # Colors for illustrative purposes
 c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 0, 0), (0, 0xff, 0), 
@@ -68,7 +71,7 @@ colors = [c_white, c_whitish, c_gray, c_black, c_red]
 
 # Patterns' coordinates (i.e. feature vectors of ${X_n} \in S_N$)
 sd, w = 0x1000000, 0x100; seed(sd)
-nx, ny, S = [RA(10, w - 10) for _ in range(N)], [RA(10, w - 10) for _ in range(N)], {}
+nx, ny, S = [RA(0x10, w - 0x10) for _ in range(N)], [RA(0x10, w - 0x10) for _ in range(N)], {}
 
 # For a Hanan's plantation: use 'product' rather than 'zip'
 patterns = product(nx, ny) if Hanan else zip(nx, ny)

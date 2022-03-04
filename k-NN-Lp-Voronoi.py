@@ -9,7 +9,7 @@
 #      * indices of k closest patterns 
 #      * a mode of class indices and assign it to $x$
 
-from numpy import arange, array, argsort
+from numpy import array, argsort
 from numpy.random import randint, seed
 from scipy.spatial.distance import cdist
 from scipy.stats import mode
@@ -19,19 +19,19 @@ from PIL import Image
 from VoronoiUtilities import save_image, ITT
 
 @ITT
-def plain_vanila_knn_lp_classifier(x, S, k, p):
+def plain_vanilla_knn_lp_classifier(x, S, k, p):
     X = tuple(S.keys())
     D = cdist(array(x), array(X), 'minkowski', p = p)
     classes = []
-    for distance in D: 
-        k_nearest_neighbors = argsort(distance)[:k]
+    for distances in D: 
+        k_nearest_neighbors = argsort(distances)[:k]
         knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
         pattern_class = int(mode(knn).mode[0])
         classes.append(pattern_class)
     return classes
 
 @ITT
-def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
+def knn_lp_Voronoi(x, S, k, w, p, colors):
     # Visualization tools
     image = Image.new("RGB", (w, w)); img = image.load()
     
@@ -42,23 +42,21 @@ def knn_lp_Voronoi(x, S, k, w, p, pattern_classes):
 
     # k-NN classifiers assign $x$ to the class whose index is
     # a mode of the k nearest learning patterns' classes
-    for (mn, distance) in enumerate(D): 
-        # Note we don't care about the distances, we only need the class indices
-        # 'k_nearest_neighbors' is a set of k nearest neighbor pattern's indices
-        k_nearest_neighbors = argsort(distance)[:k]
-        # 'knn' is a set of k nearest neighbor pattern's class indicess
+    for (mn, distances) in enumerate(D): 
+        ## Note we don't care about the distances, we only need the class indices
+        #  'k_nearest_neighbors' is a set of k nearest neighbor pattern's indices
+        k_nearest_neighbors = argsort(distances)[:k]
+        #  'knn' is a set of k nearest neighbor pattern's class indicess
         knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
-        # The mode determines the class index the patterns are assigned to...
-        # Note the ties can affect the shape
+        #  The mode determines the class index the patterns are assigned to...
+        #  Note the ties can affect the shape
         pattern_class = int(mode(knn).mode[0])
 
-        ## The line below 'paints a picture' pixel-by-pixel
-        m, n = x[mn]; img[m, n] = pattern_classes[pattern_class]
-
+        ## The line below 'paints a picture' pixel-by-pixel using colors
+        #  associated with classes
+        m, n = x[mn]; img[m, n] = colors[pattern_class]
+    # Here we save it "ad perpetuam rei memoriam"
     save_image(f'./images/{k}-N' + 'N-L{}@{}', image, p, sd)
-
-# Exemplary usage
-k, p, N, Hanan = 0b111, 0b10, 0b1_000_000, False
 
 # Colors for illustrative purposes
 c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 0, 0), (0, 0xff, 0), 
@@ -66,6 +64,10 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 																		 (0, 0, 0), (0x80, 0x80, 0x80), 
 																		 (0xdd, 0xdd, 0xdd), (0xff, 0xff, 0xff))
 colors = [c_white, c_whitish, c_gray, c_black, c_red]
+
+# Exemplary (hyper-)parameters
+k, p, N = 0b111, 0b10, 0b1_000_000
+Hanan = False
 
 # Patterns' coordinates (i.e. feature vectors of ${X_n} \in S_N$)
 sd, w = 0x1_000_000, 0x100; seed(sd)
@@ -75,7 +77,7 @@ nx, ny, S = randint(0o10, w - 0o10, N), randint(0o10, w - 0o10, N), {}
 patterns = product(nx, ny) if Hanan else zip(nx, ny)
 
 ## Patterns assigned at random to classes 
-#  (a number of classes should equal the size of the 'colors' list
+#  (a number of classes should not exceed the size of the 'colors' list)
 for x, y in patterns: S[(x, y)] = randint(len(colors))
 
 # Set of patterns {x} to be classified

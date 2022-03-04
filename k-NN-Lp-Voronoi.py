@@ -18,8 +18,10 @@ from itertools import product
 from PIL import Image
 from VoronoiUtilities import save_image, ITT
 
+### Try @home:
+##  x, S = ((0.25, 0.25), (2.5, 2.5)), {(0, 0): 0, (1, 1): 1, (2, 2): 2}; plain_vanilla_knn_lp(x, S, 1, 2) 
 @ITT
-def plain_vanilla_knn_lp_classifier(x, S, k, p):
+def plain_vanilla_knn_lp(x, S, k, p): 
     X = tuple(S.keys())
     D = cdist(array(x), array(X), 'minkowski', p = p)
     classes = []
@@ -31,7 +33,7 @@ def plain_vanilla_knn_lp_classifier(x, S, k, p):
     return classes
 
 @ITT
-def knn_lp_Voronoi(x, S, k, w, p, colors):
+def knn_lp_Voronoi(x, S, k, p, w, colors):
     # Visualization tools
     image = Image.new("RGB", (w, w)); img = image.load()
     
@@ -41,15 +43,15 @@ def knn_lp_Voronoi(x, S, k, w, p, colors):
     D = cdist(array(x), array(X), 'minkowski', p = p)
 
     # k-NN classifiers assign $x$ to the class whose index is
-    # a mode of the k nearest learning patterns' classes
+    # a mode of its k nearest learning patterns' classes
     for (mn, distances) in enumerate(D): 
-        ## Note we don't care about the distances, we only need the class indices
-        #  'k_nearest_neighbors' is a set of k nearest neighbor pattern's indices
+        ## Note here we don't care about the distances, we only need the class indices
+        #  'k_nearest_neighbors' is a set such indices and...
         k_nearest_neighbors = argsort(distances)[:k]
-        #  'knn' is a set of k nearest neighbor pattern's class indicess
+        #  ... 'knn' is a subset with k nearest neighbor patterns
         knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
-        #  The mode determines the class index the patterns are assigned to...
-        #  Note the ties can affect the shape
+        #  The mode determines the class index the pattern $x$ will be assigned to...
+        #  (note the ties can affect the shape)
         pattern_class = int(mode(knn).mode[0])
 
         ## The line below 'paints a picture' pixel-by-pixel using colors
@@ -84,7 +86,7 @@ for x, y in patterns: S[(x, y)] = randint(len(colors))
 x = tuple(product(range(w), range(w)))
 
 ### Et voilà!
-knn_lp_Voronoi(x, S, k, w, p, colors)
+knn_lp_Voronoi(x, S, k, p, w, colors)
 
 # ... and a (nutshell) summary and fanfares!
 print('seed =', sd) # A tribute to CDMA (and H. Lamar & G. Antheil 1942's invention)

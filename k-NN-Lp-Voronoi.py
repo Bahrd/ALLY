@@ -18,16 +18,21 @@ from itertools import product
 from PIL import Image
 from VoronoiUtilities import save_image, ITT
 
-### Try @home:
-##  x, S = ((0.25, 0.25), (2.5, 2.5)), {(0, 0): 0, (1, 1): 1, (2, 2): 2}; plain_vanilla_knn_lp(x, S, 1, 2) 
+### A k-NN classifier assigns $x$ to the class whose index is
+### a mode of its k nearest learning patterns class indices
+##  ¡U can try it@home!
+#   x = ((0.25, 0.25), (0, 1), (2.5, 2.5)) → patterns to classify
+#   S = {(0, 0): 0, (1, 1): 1, (2, 2): 2}  → learning patterns
+#   C = plain_vanilla_knn_lp(x, S, 1, 2)   → classification 
+
 @ITT
 def plain_vanilla_knn_lp(x, S, k, p): 
-    X = tuple(S.keys())
-    D = cdist(array(x), array(X), 'minkowski', p = p)
+    X, Y = tuple(S.keys()), tuple(S.values())
+    D = cdist(array(x), array(X), metric = 'minkowski', p = p)
     classes = []
     for distances in D: 
         k_nearest_neighbors = argsort(distances)[:k]
-        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
+        knn = [Y[neighbor] for neighbor in k_nearest_neighbors]
         pattern_class = int(mode(knn).mode[0])
         classes.append(pattern_class)
     return classes
@@ -37,19 +42,18 @@ def knn_lp_Voronoi(x, S, k, p, w, colors):
     # Visualization tools
     image = Image.new("RGB", (w, w)); img = image.load()
     
-    # Extract patterns from the learning set S...
-    X = tuple(S.keys())
+    # Extract patterns and their classes from the learning set S...
+    X, Y = tuple(S.keys()), tuple(S.values())
     # ... and compute distances to every pattern w.r.t. a selected Lp function
-    D = cdist(array(x), array(X), 'minkowski', p = p)
+    D = cdist(array(x), array(X), metric = 'minkowski', p = p)
 
-    # k-NN classifiers assign $x$ to the class whose index is
-    # a mode of its k nearest learning patterns' classes
     for (mn, distances) in enumerate(D): 
         ## Note here we don't care about the distances, we only need the class indices
-        #  'k_nearest_neighbors' is a set such indices and...
+        #  'k_nearest_neighbors' is a set such indices...
         k_nearest_neighbors = argsort(distances)[:k]
-        #  ... 'knn' is a subset with k nearest neighbor patterns
-        knn = [S[X[neighbor]] for neighbor in k_nearest_neighbors]
+        #  ... and 'knn' is a set of the k nearest neighbors' class indices
+        knn = [Y[neighbor] for neighbor in k_nearest_neighbors]
+        
         #  The mode determines the class index the pattern $x$ will be assigned to...
         #  (note the ties can affect the shape)
         pattern_class = int(mode(knn).mode[0])
@@ -67,15 +71,15 @@ c_red, c_green, c_blue, c_yellow, c_black, c_gray, c_whitish, c_white = ((0xff, 
 																		 (0xdd, 0xdd, 0xdd), (0xff, 0xff, 0xff))
 colors = [c_white, c_whitish, c_gray, c_black, c_red]
 
-# Exemplary (hyper-)parameters
-k, p, N = 0b111, 0b10, 0b1_000_000
+# (hyper-)parameters
+k, p, N = 0b1, 0b10, 0b1_000_000
 Hanan = False
 
 # Patterns' coordinates (i.e. feature vectors of ${X_n} \in S_N$)
 sd, w = 0x1_000_000, 0x100; seed(sd)
 nx, ny, S = randint(0o10, w - 0o10, N), randint(0o10, w - 0o10, N), {}
 
-# For a Hanan's plantation: use 'product' rather than 'zip'
+# For a Hanan's plantation: use 'product' instea of 'zip'
 patterns = product(nx, ny) if Hanan else zip(nx, ny)
 
 ## Patterns assigned at random to classes 

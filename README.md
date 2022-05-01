@@ -26,4 +26,4 @@ $L_p$-agnostic Hanan-grid approximations $\mathcal{A}_{N}$ and $\mathcal{A}_{N+L
 <!--- ![⅄⅃LY](./samples/⅄⅃LY.png) --->
 |![⅄⅃LY](./samples/⅄⅃LY.png)|
 |:---:|
-|Penrose's impossible triangles|
+|Penrose's impossible tribar [; left] and triangle [right ;]|

@@ -1,14 +1,15 @@
-﻿### An implementation of k-NN algorithm
-## See e.g.:
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cdist.html
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mode.html
-# https://numpy.org/doc/stable/reference/generated/numpy.argpartition.html
-##  Given a set of learning patterns $S_N$:
-#   1. Create a vector of lp distances to patterns' feature vectors ${X_n}$
-#   2. For all patterns of interest, $x$, find:
-#      * indices of k closest patterns 
-#      * a mode of class indices and assign it to $x$
-
+﻿''' 
+An implementation of the k-NN algorithm
+See e.g.:
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cdist.html
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mode.html
+https://numpy.org/doc/stable/reference/generated/numpy.argpartition.html
+Given a set of learning patterns $S_N$:
+1. Create a vector of lp distances to patterns' feature vectors ${X_n}$
+2. For all patterns of interest, $x$, find:
+    * indices of k closest patterns 
+    * a mode of class indices and assign it to $x$
+'''
 from numpy import array, argsort
 from numpy.random import randint, seed
 from scipy.spatial.distance import cdist
@@ -17,14 +18,14 @@ from itertools import product
 
 from PIL import Image
 from VoronoiUtilities import save_image, ITT
-
-### A k-NN classifier assigns $x$ to the class whose index is
-### a mode of its k nearest learning patterns class indices
-##  ¡U can try it@home!
-#   x = ((0.25, 0.25), (0, 1), (2.5, 2.5)) → patterns to classify
-#   S = {(0, 0): 0, (1, 1): 1, (2, 2): 2}  → learning patterns
-#   C = plain_vanilla_knn_lp(x, S, 1, 2)   → classification 
-
+'''
+A k-NN classifier assigns $x$ to the class whose index is
+a mode of its k nearest learning patterns class indices
+    ¡U can try it@home!
+    x = ((0.25, 0.25), (0, 1), (2.5, 2.5)) → patterns to classify
+    S = {(0, 0): 0, (1, 1): 1, (2, 2): 2}  → learning patterns
+    C = plain_vanilla_knn_lp(x, S, 1, 2)   → classification 
+'''
 @ITT
 def plain_vanilla_knn_lp(x, S, k, p): 
     X, Y = tuple(S.keys()), tuple(S.values())

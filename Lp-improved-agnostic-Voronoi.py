@@ -1,4 +1,5 @@
-﻿### ALGORITHMS 1 & 3
+﻿'''
+ALGORITHMS 1 & 3
 ##  The Lp agnostic 1-NN algorithm illustration [Project «⅄⅃LY»]
 # 1. Generate N random patterns inside a square
 # 2. Create the Voronoi's diagram for Lp, 0 < p ≤ 2 (p = 2.0 is somehow distingushed)
@@ -8,14 +9,13 @@
 # 6. Repeat the steps #2-#5 for other Lq, 0 < q ≤ 2 (q = 0.25 seems intriguing enough)
 # 7. In order to improve approximation quality one can add a new (set of L) 
 #    pattern(s) in the arbitrary position(s), together with the accompanying lattice points.
-
+'''
 from winsound import Beep as beep
 from random import randrange as RA, seed
 from sys import argv
 from glob import glob; from os import remove
 ## Local stuff...
 from VoronoiUtilities import *
-
 ## Voronoi diagrams and their agnostic versions...
 rsd = int(RA(0x12345678))	
 c, sd = (eval(argv[1]), eval(argv[2])) if len(argv) >= 3 else (eval(argv[1]), rsd) if len(argv) == 2 else (0x10, rsd)
